@@ -32,6 +32,7 @@ namespace YoutubeSuiveur
         {
             public string url;
             public string title;
+            public DateTime date;
         }
 
         Boolean changeConfig = false;
@@ -165,7 +166,12 @@ namespace YoutubeSuiveur
                     return;
                 }
             }
-            base.WndProc(ref m);
+            try
+            {
+                base.WndProc(ref m);
+            }
+            catch (Exception e)
+            { }
         }
         private void Form1_Resize(object sender, EventArgs e)
         {
@@ -286,8 +292,17 @@ namespace YoutubeSuiveur
             }
             else
                 return new Video[0];
-
-            var reader = XmlReader.Create(rss_chanel);
+            XmlReader reader;
+            try
+            {
+                reader = XmlReader.Create(rss_chanel);
+            }
+            catch (Exception e)
+            {
+                if (cb_error.Checked)
+                    System.Windows.MessageBox.Show(e.Message, "Error");
+                return new Video[0];
+            }
             SyndicationFeed feed = new SyndicationFeed();
             try
             {
@@ -297,6 +312,7 @@ namespace YoutubeSuiveur
             {
                 if (cb_error.Checked) 
                     System.Windows.MessageBox.Show("Rss chanel unknow: "+ rss_chanel, "Error");
+                return new Video[0];
             }
             reader.Close();
             IEnumerable<Video> films = new Video[]{};
@@ -307,8 +323,9 @@ namespace YoutubeSuiveur
                          select new Video
                          {
                              title = itm.Title.Text,
-                             url = "https://www.youtube.com/embed/"+itm.Id.Substring(("yt: video:").Length-1)
-                         }).ToList();
+                             url = "https://www.youtube.com/embed/" + itm.Id.Substring(("yt: video:").Length - 1),
+                             date = itm.LastUpdatedTime.DateTime
+                         });//.ToList();
             }
             if (site.Equals("odysee", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -316,7 +333,8 @@ namespace YoutubeSuiveur
                          select new Video
                          {
                              title = itm.Title.Text,
-                             url = "https://odysee.com/$/embed" + HttpUtility.UrlDecode(itm.Id).Substring((HttpUtility.UrlDecode(itm.Id)).LastIndexOf("/"))
+                             url = "https://odysee.com/$/embed" + HttpUtility.UrlDecode(itm.Id).Substring((HttpUtility.UrlDecode(itm.Id)).LastIndexOf("/")),
+                             date = itm.LastUpdatedTime.DateTime
                          });
                 
             }
@@ -438,6 +456,7 @@ namespace YoutubeSuiveur
 
             if (buttonUp != null)
             {
+                toolTip1.Hide(this);
                 //on supprime tout
                 for (int num_video = 0; num_video < video_lists.Count && buttonUp != null; num_video++)
                 {
@@ -457,9 +476,10 @@ namespace YoutubeSuiveur
                 if (emulate)
                 {
                     video_lists.Add("test html5", new List<Video>());
-                     Video video;
+                    Video video;
                     video.title = "Test html5";
                     video.url = "https://html5test.com/";
+                    video.date = new DateTimeOffset(DateTime.Now).DateTime;
                     video_lists["test html5"].Add(video);
 
                     video_lists.Add("yahoo", new List<Video>());
@@ -550,7 +570,8 @@ namespace YoutubeSuiveur
 
                     chromiumWebBrowser[num_video].WebView = webView[num_video];
                     chromiumWebBrowser[num_video].WebView.NewWindow += newWindows_event;
-                    chromiumWebBrowser[num_video].MouseEnter += WebViewMouseEnter_event;
+                    //chromiumWebBrowser[num_video].MouseEnter += WebViewMouseEnter_event;
+                    chromiumWebBrowser[num_video].MouseMove+= WebViewMouseMove_event;
                     //chromiumWebBrowser[num_video].MouseLeave += WebView_MouseLeave;
                     chromiumWebBrowser[num_video].WebView.Engine.Options.AllowProprietaryMediaFormats();
 
@@ -900,12 +921,24 @@ namespace YoutubeSuiveur
              }
         }
 
-        private void WebViewMouseEnter_event(object sender, EventArgs e)
+        int MouseX = 0, MouseY = 0;
+        private void WebViewMouseMove_event(object sender, MouseEventArgs e)
         {
             int num_chromiumWebBrowser;
-            if (int.TryParse(((EO.WinForm.WebControl)sender).Name.Substring("chromiumWebBrowser".Length), out num_chromiumWebBrowser))
-                toolTip1.Show(dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value.ToString(), chromiumWebBrowser[num_chromiumWebBrowser],2000);
-
+            if (MouseX != e.X || MouseY != e.Y)
+            {
+                MouseX = e.X; MouseY = e.Y;
+                if (int.TryParse(((EO.WinForm.WebControl)sender).Name.Substring("chromiumWebBrowser".Length), out num_chromiumWebBrowser))
+                {
+                    if (chromiumWebBrowser != null && chromiumWebBrowser.Length >= num_chromiumWebBrowser)
+                        if (video_lists != null && video_lists.Count >= num_chromiumWebBrowser && num_currentVideo.Length >= num_chromiumWebBrowser && video_lists.ElementAt(num_chromiumWebBrowser).Value.Count >= num_currentVideo[num_chromiumWebBrowser])
+                        {
+                            toolTip1.SetToolTip(chromiumWebBrowser[num_chromiumWebBrowser], dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value.ToString() + '\n' + video_lists.ElementAt(num_chromiumWebBrowser).Value[num_currentVideo[num_chromiumWebBrowser]].date.ToString());
+                        }
+                        else
+                            toolTip1.SetToolTip(chromiumWebBrowser[num_chromiumWebBrowser], dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value.ToString());
+                }
+            }
         }
     }
 }

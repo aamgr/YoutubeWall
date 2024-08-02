@@ -44,14 +44,12 @@ namespace YoutubeSuiveur
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.pan_config = new System.Windows.Forms.Panel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.pan_video = new System.Windows.Forms.Panel();
-            this.cb_error = new System.Windows.Forms.CheckBox();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.webView1 = new EO.WebBrowser.WebView();
-            this.webView2 = new EO.WebBrowser.WebView();
             this.Site = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Chaine = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LastVideo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pan_video = new System.Windows.Forms.Panel();
+            this.cb_error = new System.Windows.Forms.CheckBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.pan_config.SuspendLayout();
@@ -60,6 +58,7 @@ namespace YoutubeSuiveur
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.Color.White;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.configurationToolStripMenuItem,
             this.reloadToolStripMenuItem,
@@ -69,7 +68,7 @@ namespace YoutubeSuiveur
             this.testToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1120, 27);
+            this.menuStrip1.Size = new System.Drawing.Size(1120, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -77,7 +76,7 @@ namespace YoutubeSuiveur
             // 
             this.configurationToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
-            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(105, 23);
+            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(105, 20);
             this.configurationToolStripMenuItem.Text = "Configuration";
             this.configurationToolStripMenuItem.Click += new System.EventHandler(this.configurationToolStripMenuItem_Click);
             // 
@@ -85,7 +84,7 @@ namespace YoutubeSuiveur
             // 
             this.reloadToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(110, 23);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(110, 20);
             this.reloadToolStripMenuItem.Text = "Reload Config";
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
             // 
@@ -93,7 +92,7 @@ namespace YoutubeSuiveur
             // 
             this.startToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(77, 23);
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
             this.startToolStripMenuItem.Text = "Start wall";
             this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
@@ -103,16 +102,20 @@ namespace YoutubeSuiveur
             this.exitToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(42, 23);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // toolStripTextBox1
             // 
             this.toolStripTextBox1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripTextBox1.BackColor = System.Drawing.Color.White;
+            this.toolStripTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.toolStripTextBox1.Enabled = false;
             this.toolStripTextBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripTextBox1.Name = "toolStripTextBox1";
-            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 23);
+            this.toolStripTextBox1.ShortcutsEnabled = false;
+            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 20);
             this.toolStripTextBox1.Text = "                                                     ";
             // 
             // testToolStripMenuItem
@@ -120,7 +123,7 @@ namespace YoutubeSuiveur
             this.testToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.testToolStripMenuItem.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(46, 23);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.testToolStripMenuItem.Text = "Test";
             this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 
@@ -175,33 +178,6 @@ namespace YoutubeSuiveur
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             this.dataGridView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
             // 
-            // pan_video
-            // 
-            this.pan_video.AutoScroll = true;
-            this.pan_video.BackColor = System.Drawing.Color.Transparent;
-            this.pan_video.Location = new System.Drawing.Point(3, 25);
-            this.pan_video.Name = "pan_video";
-            this.pan_video.Size = new System.Drawing.Size(283, 496);
-            this.pan_video.TabIndex = 4;
-            this.pan_video.Click += new System.EventHandler(this.pan_video_Click);
-            // 
-            // cb_error
-            // 
-            this.cb_error.AutoSize = true;
-            this.cb_error.Location = new System.Drawing.Point(676, 5);
-            this.cb_error.Name = "cb_error";
-            this.cb_error.Size = new System.Drawing.Size(77, 17);
-            this.cb_error.TabIndex = 5;
-            this.cb_error.Text = "Show error";
-            this.cb_error.UseVisualStyleBackColor = true;
-            // 
-            // toolTip1
-            // 
-            this.toolTip1.AutoPopDelay = 5000;
-            this.toolTip1.InitialDelay = 500;
-            this.toolTip1.IsBalloon = true;
-            this.toolTip1.ReshowDelay = 1000;
-            // 
             // Site
             // 
             this.Site.HeaderText = "Website";
@@ -220,6 +196,35 @@ namespace YoutubeSuiveur
             this.LastVideo.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.LastVideo.HeaderText = "Last Video";
             this.LastVideo.Name = "LastVideo";
+            // 
+            // pan_video
+            // 
+            this.pan_video.AutoScroll = true;
+            this.pan_video.BackColor = System.Drawing.Color.Transparent;
+            this.pan_video.Location = new System.Drawing.Point(3, 25);
+            this.pan_video.Name = "pan_video";
+            this.pan_video.Size = new System.Drawing.Size(283, 496);
+            this.pan_video.TabIndex = 4;
+            this.pan_video.Click += new System.EventHandler(this.pan_video_Click);
+            // 
+            // cb_error
+            // 
+            this.cb_error.AutoSize = true;
+            this.cb_error.BackColor = System.Drawing.Color.White;
+            this.cb_error.Location = new System.Drawing.Point(676, 5);
+            this.cb_error.Name = "cb_error";
+            this.cb_error.Size = new System.Drawing.Size(77, 17);
+            this.cb_error.TabIndex = 5;
+            this.cb_error.Text = "Show error";
+            this.cb_error.UseVisualStyleBackColor = false;
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.AutoPopDelay = 2000;
+            this.toolTip1.InitialDelay = 0;
+            this.toolTip1.IsBalloon = true;
+            this.toolTip1.ReshowDelay = 1000;
+            this.toolTip1.UseAnimation = false;
             // 
             // Form1
             // 
@@ -263,8 +268,6 @@ namespace YoutubeSuiveur
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
         private System.Windows.Forms.CheckBox cb_error;
         private System.Windows.Forms.ToolTip toolTip1;
-        private EO.WebBrowser.WebView webView1;
-        private EO.WebBrowser.WebView webView2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Site;
         private System.Windows.Forms.DataGridViewTextBoxColumn Chaine;
         private System.Windows.Forms.DataGridViewTextBoxColumn LastVideo;

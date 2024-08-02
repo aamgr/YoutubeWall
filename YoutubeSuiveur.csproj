@@ -361,6 +361,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="README.md" />
     <None Include="YoutubeSuiveur_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
