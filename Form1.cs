@@ -324,7 +324,7 @@ namespace YoutubeSuiveur
                          {
                              title = itm.Title.Text,
                              url = "https://www.youtube.com/embed/" + itm.Id.Substring(("yt: video:").Length - 1),
-                             date = itm.LastUpdatedTime.DateTime
+                             date = itm.PublishDate.DateTime
                          });//.ToList();
             }
             if (site.Equals("odysee", StringComparison.CurrentCultureIgnoreCase))
@@ -334,7 +334,7 @@ namespace YoutubeSuiveur
                          {
                              title = itm.Title.Text,
                              url = "https://odysee.com/$/embed" + HttpUtility.UrlDecode(itm.Id).Substring((HttpUtility.UrlDecode(itm.Id)).LastIndexOf("/")),
-                             date = itm.LastUpdatedTime.DateTime
+                             date = itm.PublishDate.DateTime
                          });
                 
             }
