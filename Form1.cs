@@ -924,7 +924,7 @@ Access - Control - Expose - Headers: < you can add values here>*/
                     {
                         if (video_lists != null && video_lists.Count >= num_chromiumWebBrowser && num_currentVideo.Length >= num_chromiumWebBrowser && video_lists.ElementAt(num_chromiumWebBrowser).Value.Count > 0 && video_lists.ElementAt(num_chromiumWebBrowser).Value.Count >= num_currentVideo[num_chromiumWebBrowser])
                         {
-                            toolTip1.SetToolTip(chromiumWebBrowser[num_chromiumWebBrowser], dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value != null ? dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value.ToString() : "" + '\n' + video_lists.ElementAt(num_chromiumWebBrowser).Value[num_currentVideo[num_chromiumWebBrowser]].date.ToString());
+                            toolTip1.SetToolTip(chromiumWebBrowser[num_chromiumWebBrowser], (dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value != null ? dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value.ToString() : "") + '\n' + video_lists.ElementAt(num_chromiumWebBrowser).Value[num_currentVideo[num_chromiumWebBrowser]].date.ToString());
                         }
                         else
                             toolTip1.SetToolTip(chromiumWebBrowser[num_chromiumWebBrowser], dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value != null ? dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value.ToString() : "");
