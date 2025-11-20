@@ -56,7 +56,8 @@ namespace YoutubeSuiveur
         }
 
         private async void Form1_Load(object sender, EventArgs e)
-        {                     
+        {
+            EO.WebEngine.EngineOptions.Default.ExtraCommandLineArgs = "--strict-origin-when-cross-origin";
             this.WindowState = FormWindowState.Maximized;
             Form1_Resize(sender, e);
             if (!File.Exists("Config.txt"))
@@ -72,7 +73,7 @@ namespace YoutubeSuiveur
                 dataGridView1.Rows.Add(line.Split('\t'));
             }
             sr.Close();
-        }
+         }
 
          public static string ReplaceLastOccurrence(string source, string find, string replace)
         {
@@ -238,7 +239,7 @@ namespace YoutubeSuiveur
                     lastVid = dataGridView1.Rows[row].Cells[2].Value.ToString();
 
                 if (site.Equals("youtube", StringComparison.CurrentCultureIgnoreCase))
-                    site = "https://www.youtube.com/@" + chanel + "/videos";
+                    site = "https://www.youtube-nocookie.com/@" + chanel + "/videos";
                 else if (site.Equals("odysee", StringComparison.CurrentCultureIgnoreCase))
                     site = "https://odysee.com/@" + chanel + ":a?view=content";
                 else
@@ -319,12 +320,13 @@ namespace YoutubeSuiveur
             Video[] videoList = new Video[0];
             if (site.Equals("youtube", StringComparison.CurrentCultureIgnoreCase))
             {
+                //url = "https://www.youtube-nocookie.com/embed/" + itm.Id.Substring(("yt: video:").Length - 1),
                 films = (from itm in feed.Items
                          select new Video
                          {
                              title = itm.Title.Text,
-                             url = "https://www.youtube.com/embed/" + itm.Id.Substring(("yt: video:").Length - 1),
-                             date = itm.LastUpdatedTime.DateTime
+                             url = "https://www.yout-ube.com/watch?v=" + itm.Id.Substring(("yt: video:").Length - 1),
+                             date = itm.PublishDate.DateTime
                          });//.ToList();
             }
             if (site.Equals("odysee", StringComparison.CurrentCultureIgnoreCase))
@@ -334,7 +336,7 @@ namespace YoutubeSuiveur
                          {
                              title = itm.Title.Text,
                              url = "https://odysee.com/$/embed" + HttpUtility.UrlDecode(itm.Id).Substring((HttpUtility.UrlDecode(itm.Id)).LastIndexOf("/")),
-                             date = itm.LastUpdatedTime.DateTime
+                             date = itm.PublishDate.DateTime
                          });
                 
             }
@@ -412,42 +414,15 @@ namespace YoutubeSuiveur
                 StringComparison comp = StringComparison.OrdinalIgnoreCase;
 
                 CurentVideo = CurentVideo.Substring(CurentVideo.LastIndexOf('/') + 1);
-                if (lastVid != CurentVideo)
-                    textBox[num_chromiumWebBrowser].BackColor = System.Drawing.Color.GreenYellow;
-                else
+                if (CurentVideo.Contains(lastVid))
                     textBox[num_chromiumWebBrowser].BackColor = System.Drawing.Color.White;
+                else
+                    textBox[num_chromiumWebBrowser].BackColor = System.Drawing.Color.GreenYellow;
             }
-            /*            if (video.url.IndexOf("odysee") >= 0)
-                        {
-                            embed = @"
-            <html>
-                <head>
-                <head>
-                    <meta http-equiv='X-UA-Compatible' content='IE=Edge'/>
-                    <meta charset='utf8'>
-                </head>
-                <body  style='overflow: hidden; margin: 0 0 0 0;'>           
-                    <iframe id='odysee-iframe' style='width:100%; aspect-ratio:16 / 9;' src='" + video.url + @"' allowfullscreen></iframe>    </body>
-            </html>";
-
-                            chromiumWebBrowser[num_chromiumWebBrowser].WebView.Url=video.url;//chromiumWebBrowser[num_chromiumWebBrowser].LoadUrl(video.url);
-                        }
-                        else
-                        {
-                            embed = @"
-            <html overflow='auto' margin='0px' padding='0px' height='100%' border='none' >
-                <head>
-                    <meta http-equiv='X-UA-Compatible' content='IE=Edge'/>
-                </head>
-                <body margin='0px' padding='0px' height='100%' border='none'>
-                    <iframe src='" + video.url + @"' margin='0px' padding='0px' border='none' frameborder='0' marginheight='0' marginwidth='0' height='100%' width='100%' scrolling='auto' display='block' overflow-y='auto' overflow-x='hidden' allow='fullscreen' allowfullscreen>
-                    </iframe>
-                </body>
-            </html>
-            ";
-                             chromiumWebBrowser[num_chromiumWebBrowser].WebView.Url = video.url;//LoadHtml(embed);
-                        }*/
+            chromiumWebBrowser[num_chromiumWebBrowser].WebView.ClearAuthCache();
+            //chromiumWebBrowser[num_chromiumWebBrowser].WebView.Engine.CookieManager.DeleteCookies();
             chromiumWebBrowser[num_chromiumWebBrowser].WebView.Url = video.url;
+// iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
         }
         bool emulate = false;
         private async void startToolStripMenuItem_Click(object sender, EventArgs e)
@@ -489,7 +464,8 @@ namespace YoutubeSuiveur
 
                     video_lists.Add("youtube", new List<Video>());
                     video.title = "video youtube";
-                    video.url = "https://www.youtube.com/embed/Zwj9sxs1hEI?feature=oembed";
+                    //video.url = "https://www.youtube-nocookie.com/embed/Zwj9sxs1hEI?feature=oembed";
+                    video.url = "https://www.yout-ube.com/watch?v=Zwj9sxs1hEI";
                     video_lists["youtube"].Add(video);
 
                     video_lists.Add("test video", new List<Video>());
@@ -521,7 +497,10 @@ namespace YoutubeSuiveur
                     }
                 }
                 num_currentVideo = null;
-                chromiumWebBrowser = new EO.WinForm.WebControl/*ChromiumWebBrowser*/[video_lists.Count];
+
+                EO.WebEngine.Engine.CleanUpCacheFolders(CacheFolderCleanUpPolicy.AllVersions);
+
+                chromiumWebBrowser = new EO.WinForm.WebControl[video_lists.Count];
                 webView = new EO.WebBrowser.WebView[video_lists.Count];
                 buttonUp = new System.Windows.Forms.Button[video_lists.Count];
                 buttonDown = new System.Windows.Forms.Button[video_lists.Count];
@@ -568,14 +547,32 @@ namespace YoutubeSuiveur
                     //chromiumWebBrowser[num_video].ActivateBrowserOnCreation = false;
                     webView[num_video] = new EO.WebBrowser.WebView();
 
+                    EO.WebEngine.WebViewOptions options = new EO.WebEngine.WebViewOptions();
+                    options.EnableWebSecurity = false;
+                    webView[num_video].SetOptions(options);
+                    webView[num_video].Engine.Options.ExtraCommandLineArgs = "--Access-Control-Allow-Origin";
+
+
                     chromiumWebBrowser[num_video].WebView = webView[num_video];
                     chromiumWebBrowser[num_video].WebView.NewWindow += newWindows_event;
                     //chromiumWebBrowser[num_video].MouseEnter += WebViewMouseEnter_event;
                     chromiumWebBrowser[num_video].MouseMove+= WebViewMouseMove_event;
                     //chromiumWebBrowser[num_video].MouseLeave += WebView_MouseLeave;
-                    chromiumWebBrowser[num_video].WebView.Engine.Options.AllowProprietaryMediaFormats();
+                    chromiumWebBrowser[num_video].WebView.Engine.Options.SetFeatureState(EngineFeature.ProprietaryMediaFormats, EngineFeatureState.Enabled);// ( AllowProprietaryMediaFormats();
+/*                    chromiumWebBrowser[num_video].WebView.Engine.Options.ExtraCommandLineArgs.Append(("","");
+                    Access - Control - Allow - Origin: *
+      Access - Control - Allow - Methods: "GET, PUT, POST, DELETE, HEAD, OPTIONS"
+Access - Control - Expose - Headers: < you can add values here>*/
 
-                    chromiumWebBrowser[num_video].Name = "chromiumWebBrowser" + num_video;
+
+
+
+
+
+
+
+
+                           chromiumWebBrowser[num_video].Name = "chromiumWebBrowser" + num_video;
                     chromiumWebBrowser[num_video].Size = new System.Drawing.Size(300, 250);
                     chromiumWebBrowser[num_video].Margin = new Padding(0, 0, 0, 0);
                     chromiumWebBrowser[num_video].Padding = new Padding(0, 0, 0, 0);
@@ -598,13 +595,6 @@ namespace YoutubeSuiveur
                     buttonDown[num_video].Location = new System.Drawing.Point(2, 6);
                     textBox[num_video].Location = new System.Drawing.Point(23, 1);
                     chromiumWebBrowser[num_video].Location = new System.Drawing.Point(0, 50);
-
-              /*      posX++;
-                    if ((posX + 1) * 300 > this.Size.Width)
-                    {
-                        posY++;
-                        posX = 0;
-                    }*/
                 }
 
                 for (int num_chromiumWebBrowser = 0; num_chromiumWebBrowser < nbVideoTGoDraw; num_chromiumWebBrowser++)
@@ -930,13 +920,15 @@ namespace YoutubeSuiveur
                 MouseX = e.X; MouseY = e.Y;
                 if (int.TryParse(((EO.WinForm.WebControl)sender).Name.Substring("chromiumWebBrowser".Length), out num_chromiumWebBrowser))
                 {
-                    if (chromiumWebBrowser != null && chromiumWebBrowser.Length >= num_chromiumWebBrowser)
-                        if (video_lists != null && video_lists.Count >= num_chromiumWebBrowser && num_currentVideo.Length >= num_chromiumWebBrowser && video_lists.ElementAt(num_chromiumWebBrowser).Value.Count >= num_currentVideo[num_chromiumWebBrowser])
+                    if (chromiumWebBrowser != null && chromiumWebBrowser.Length >= num_chromiumWebBrowser && dataGridView1.Rows.Count > num_chromiumWebBrowser)
+                    {
+                        if (video_lists != null && video_lists.Count >= num_chromiumWebBrowser && num_currentVideo.Length >= num_chromiumWebBrowser && video_lists.ElementAt(num_chromiumWebBrowser).Value.Count > 0 && video_lists.ElementAt(num_chromiumWebBrowser).Value.Count >= num_currentVideo[num_chromiumWebBrowser])
                         {
-                            toolTip1.SetToolTip(chromiumWebBrowser[num_chromiumWebBrowser], dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value.ToString() + '\n' + video_lists.ElementAt(num_chromiumWebBrowser).Value[num_currentVideo[num_chromiumWebBrowser]].date.ToString());
+                            toolTip1.SetToolTip(chromiumWebBrowser[num_chromiumWebBrowser], dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value != null ? dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value.ToString() : "" + '\n' + video_lists.ElementAt(num_chromiumWebBrowser).Value[num_currentVideo[num_chromiumWebBrowser]].date.ToString());
                         }
                         else
-                            toolTip1.SetToolTip(chromiumWebBrowser[num_chromiumWebBrowser], dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value.ToString());
+                            toolTip1.SetToolTip(chromiumWebBrowser[num_chromiumWebBrowser], dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value != null ? dataGridView1.Rows[num_chromiumWebBrowser].Cells[1].Value.ToString() : "");
+                    }
                 }
             }
         }
